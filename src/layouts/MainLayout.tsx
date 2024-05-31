@@ -6,7 +6,9 @@ import {
   Drawer,
   Flex,
   Group,
+  MantineColor,
   NavLink,
+  StyleProp,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ReactNode } from "react";
@@ -14,9 +16,13 @@ import { Link, useLocation } from "react-router-dom";
 
 type MainLayoutProps = {
   children: ReactNode;
+  bg?: StyleProp<MantineColor>;
 };
 
-export default function MainLayout(props: MainLayoutProps) {
+export default function MainLayout({
+  bg = "white",
+  ...props
+}: MainLayoutProps) {
   const { pathname } = useLocation();
 
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
@@ -90,7 +96,7 @@ export default function MainLayout(props: MainLayoutProps) {
           }}
         />
       </Drawer>
-      <Flex direction="column">
+      <Flex direction="column" bg={bg}>
         <Flex
           bg="white"
           pos="sticky"
