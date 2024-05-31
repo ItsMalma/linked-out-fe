@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import CompaniesPage from "./pages/CompaniesPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import HomePage from "./pages/HomePage";
 import JobsPage from "./pages/JobsPage";
 import LoginPage from "./pages/LoginPage";
@@ -11,4 +12,5 @@ export const router = createBrowserRouter([
   { path: "/companies", Component: CompaniesPage },
   { path: "/register", Component: RegisterPage },
   { path: "/login", Component: LoginPage },
+  { path: "/forgot-password", Component: ForgotPasswordPage },
 ]);
