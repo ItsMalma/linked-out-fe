@@ -28,7 +28,7 @@ export default function RegisterPage() {
           <Text fz="h2" fw="bold">
             Mari buat profil kamu.
           </Text>
-          <Box w="100%" bg="white" px="xl" py="xl ">
+          <Box w="100%" bg="white" px="xl" py="xl">
             <Flex direction="column" gap="lg" align="center" justify="center">
               <SimpleGrid cols={2}>
                 <TextInput placeholder="Nama depan" size="lg" />
