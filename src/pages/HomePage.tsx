@@ -137,7 +137,7 @@ export default function HomePage() {
               2 ribu talenta dapat kerja via LinkedOut
             </Text>
             <Text ta="center">
-              Simak kisah mereka dapat pekerjaan via Glints. Kini giliranmu!
+              Simak kisah mereka dapat pekerjaan via LinkedOut. Kini giliranmu!
             </Text>
           </Flex>
           <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">

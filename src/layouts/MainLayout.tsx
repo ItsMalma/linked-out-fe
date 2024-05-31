@@ -10,13 +10,15 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 type MainLayoutProps = {
   children: ReactNode;
 };
 
 export default function MainLayout(props: MainLayoutProps) {
+  const { pathname } = useLocation();
+
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
 
@@ -98,12 +100,7 @@ export default function MainLayout(props: MainLayoutProps) {
             borderBottom: "1px solid var(--mantine-color-gray-5)",
           }}
         >
-          <Container
-            fluid
-            w="100%"
-            h={60}
-            px={{ base: "lg", md: "xl", xl: "3rem" }}
-          >
+          <Container size="xl" w="100%" h={60}>
             <Flex w="100%" h="100%" justify="space-between">
               <Group gap="xl">
                 <Anchor
@@ -113,6 +110,7 @@ export default function MainLayout(props: MainLayoutProps) {
                   component={Link}
                   to="/jobs"
                   visibleFrom="md"
+                  underline={pathname == "/jobs" ? "always" : "hover"}
                 >
                   Lowongan Kerja
                 </Anchor>
@@ -123,6 +121,7 @@ export default function MainLayout(props: MainLayoutProps) {
                   component={Link}
                   to="/companies"
                   visibleFrom="md"
+                  underline={pathname == "/companies" ? "always" : "hover"}
                 >
                   Perusahaan
                 </Anchor>
