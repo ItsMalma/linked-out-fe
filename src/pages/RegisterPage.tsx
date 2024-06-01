@@ -12,21 +12,52 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
+import { valibotResolver } from "mantine-form-valibot-resolver";
 import { useCallback } from "react";
 import { Link } from "react-router-dom";
+import * as v from "valibot";
+import { isMobilePhone } from "validator";
 import MainLayout from "../layouts/MainLayout";
 
-type RegisterPageValues = {
-  namaDepan: string;
-  namaBelakang: string;
-  email: string;
-  kataSandi: string;
-  alamat: string;
-  nomorWhatsapp: string;
-};
+const registerFormSchema = v.object({
+  namaDepan: v.pipe(
+    v.string("Format tidak valid"),
+    v.minLength(1, "Tidak boleh kosong"),
+    v.maxLength(100, "Maksimal 100 karakter")
+  ),
+  namaBelakang: v.nullable(
+    v.pipe(
+      v.string("Format tidak valid"),
+      v.maxLength(100, "Maksimal 100 karakter")
+    )
+  ),
+  email: v.pipe(
+    v.string("Format tidak valid"),
+    v.minLength(1, "Tidak boleh kosong"),
+    v.maxLength(100, "Maksimal 255 karakter"),
+    v.email("Format email salah")
+  ),
+  kataSandi: v.pipe(
+    v.string("Format tidak valid"),
+    v.minLength(1, "Tidak boleh kosong"),
+    v.minLength(8, "Minimal 8 karakter")
+  ),
+  alamat: v.pipe(
+    v.string("Format tidak valid"),
+    v.minLength(1, "Tidak boleh kosong"),
+    v.maxLength(200, "Maksimal 200 karakter")
+  ),
+  nomorWhatsapp: v.pipe(
+    v.string("Format tidak valid"),
+    v.minLength(1, "Tidak boleh kosong"),
+    v.check(isMobilePhone, "Format nomor whatsapp salah")
+  ),
+});
+
+type RegisterFormValues = v.InferOutput<typeof registerFormSchema>;
 
 export default function RegisterPage() {
-  const form = useForm<RegisterPageValues>({
+  const form = useForm<RegisterFormValues>({
     mode: "uncontrolled",
     initialValues: {
       namaDepan: "",
@@ -36,6 +67,7 @@ export default function RegisterPage() {
       alamat: "",
       nomorWhatsapp: "",
     },
+    validate: valibotResolver(registerFormSchema),
   });
   const onSubmit = useCallback(function () {}, []);
 
@@ -68,23 +100,42 @@ export default function RegisterPage() {
               justify="center"
             >
               <SimpleGrid w="100%" cols={2}>
-                <TextInput placeholder="Nama depan" size="lg" />
-                <TextInput placeholder="Nama belakang" size="lg" />
-                <TextInput type="email" placeholder="Email" size="lg" />
+                <TextInput
+                  placeholder="Nama depan"
+                  size="lg"
+                  {...form.getInputProps("namaDepan")}
+                />
+                <TextInput
+                  placeholder="Nama belakang"
+                  size="lg"
+                  {...form.getInputProps("namaBelakang")}
+                />
+                <TextInput
+                  type="email"
+                  placeholder="Email"
+                  size="lg"
+                  {...form.getInputProps("email")}
+                />
                 <PasswordInput
                   type="password"
                   placeholder="Kata Sandi"
                   size="lg"
+                  {...form.getInputProps("kataSandi")}
                 />
-                <Autocomplete placeholder="Alamat" size="lg" />
+                <Autocomplete
+                  placeholder="Alamat"
+                  size="lg"
+                  {...form.getInputProps("alamat")}
+                />
                 <TextInput
                   type="email"
                   placeholder="Nomor WhatsApp"
                   size="lg"
                   leftSection={<IconBrandWhatsapp />}
+                  {...form.getInputProps("nomorWhatsapp")}
                 />
               </SimpleGrid>
-              <Button tt="uppercase" size="lg" w="360px">
+              <Button type="submit" tt="uppercase" size="lg" w="360px">
                 Daftar
               </Button>
               <Flex gap="xs">

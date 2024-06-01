@@ -8,10 +8,40 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { valibotResolver } from "mantine-form-valibot-resolver";
+import { useCallback } from "react";
 import { Link } from "react-router-dom";
+import * as v from "valibot";
 import MainLayout from "../layouts/MainLayout";
 
+const loginFormSchema = v.object({
+  email: v.pipe(
+    v.string("Format tidak valid"),
+    v.minLength(1, "Tidak boleh kosong"),
+    v.maxLength(100, "Maksimal 255 karakter"),
+    v.email("Format email salah")
+  ),
+  kataSandi: v.pipe(
+    v.string("Format tidak valid"),
+    v.minLength(1, "Tidak boleh kosong"),
+    v.minLength(8, "Minimal 8 karakter")
+  ),
+});
+
+type LoginFormValues = v.InferOutput<typeof loginFormSchema>;
+
 export default function LoginPage() {
+  const form = useForm<LoginFormValues>({
+    mode: "uncontrolled",
+    initialValues: {
+      email: "",
+      kataSandi: "",
+    },
+    validate: valibotResolver(loginFormSchema),
+  });
+  const onSubmit = useCallback(function () {}, []);
+
   return (
     <MainLayout bg="gray.0">
       <Container size="xs" w="100%">
@@ -26,19 +56,33 @@ export default function LoginPage() {
             Selamat Datang Kembali!
           </Text>
           <Text fz="lg">Masuk ke akun kamu</Text>
-          <Box w="100%" bg="white" px="xl" py="xl">
+          <Box
+            w="100%"
+            bg="white"
+            px="xl"
+            py="xl"
+            component="form"
+            onSubmit={form.onSubmit(onSubmit)}
+          >
             <Flex direction="column" gap="lg" align="center" justify="center">
-              <TextInput w="100%" type="email" placeholder="Email" size="lg" />
+              <TextInput
+                w="100%"
+                type="email"
+                placeholder="Email"
+                size="lg"
+                {...form.getInputProps("email")}
+              />
               <PasswordInput
                 w="100%"
                 type="password"
                 placeholder="Kata Sandi"
                 size="lg"
+                {...form.getInputProps("kataSandi")}
               />
               <Anchor component={Link} to="/forgot-password">
                 Lupa kata sandi?
               </Anchor>
-              <Button tt="uppercase" size="lg" w="360px">
+              <Button type="submit" tt="uppercase" size="lg" w="360px">
                 Masuk
               </Button>
               <Flex gap="xs">
