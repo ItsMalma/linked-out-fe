@@ -23,10 +23,10 @@ const forgotPasswordFormSchema = v.object({
   ),
 });
 
-type ForgotPasswordFormValues = v.InferOutput<typeof forgotPasswordFormSchema>;
+type ForgotPasswordInput = v.InferInput<typeof forgotPasswordFormSchema>;
 
 export default function ForgotPasswordPage() {
-  const form = useForm<ForgotPasswordFormValues>({
+  const form = useForm<ForgotPasswordInput>({
     mode: "uncontrolled",
     initialValues: {
       email: "",
@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
                   w="100%"
                   type="email"
                   placeholder="Email"
-                  size="lg"
+                  size="md"
                   {...form.getInputProps("email")}
                 />
                 <Text>
@@ -71,13 +71,13 @@ export default function ForgotPasswordPage() {
                 </Text>
               </Flex>
               <Stack gap="xs" w="100%">
-                <Button type="submit" tt="uppercase" size="lg" w="100%">
+                <Button type="submit" tt="uppercase" size="md" w="100%">
                   Submit
                 </Button>
                 <Button
                   variant="outline"
                   tt="uppercase"
-                  size="lg"
+                  size="md"
                   w="100%"
                   component={Link}
                   to="/login"

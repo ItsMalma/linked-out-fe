@@ -14,7 +14,7 @@ import { useForm } from "@mantine/form";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { valibotResolver } from "mantine-form-valibot-resolver";
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as v from "valibot";
 import { isMobilePhone } from "validator";
 import MainLayout from "../layouts/MainLayout";
@@ -54,10 +54,12 @@ const registerFormSchema = v.object({
   ),
 });
 
-type RegisterFormValues = v.InferOutput<typeof registerFormSchema>;
+type RegisterInput = v.InferInput<typeof registerFormSchema>;
 
 export default function RegisterPage() {
-  const form = useForm<RegisterFormValues>({
+  const navigate = useNavigate();
+
+  const form = useForm<RegisterInput>({
     mode: "uncontrolled",
     initialValues: {
       namaDepan: "",
@@ -69,7 +71,12 @@ export default function RegisterPage() {
     },
     validate: valibotResolver(registerFormSchema),
   });
-  const onSubmit = useCallback(function () {}, []);
+  const onSubmit = useCallback(
+    function () {
+      navigate("/onboarding");
+    },
+    [navigate]
+  );
 
   return (
     <MainLayout bg="gray.0">
@@ -102,40 +109,40 @@ export default function RegisterPage() {
               <SimpleGrid w="100%" cols={2}>
                 <TextInput
                   placeholder="Nama depan"
-                  size="lg"
+                  size="md"
                   {...form.getInputProps("namaDepan")}
                 />
                 <TextInput
                   placeholder="Nama belakang"
-                  size="lg"
+                  size="md"
                   {...form.getInputProps("namaBelakang")}
                 />
                 <TextInput
                   type="email"
                   placeholder="Email"
-                  size="lg"
+                  size="md"
                   {...form.getInputProps("email")}
                 />
                 <PasswordInput
                   type="password"
                   placeholder="Kata Sandi"
-                  size="lg"
+                  size="md"
                   {...form.getInputProps("kataSandi")}
                 />
                 <Autocomplete
                   placeholder="Alamat"
-                  size="lg"
+                  size="md"
                   {...form.getInputProps("alamat")}
                 />
                 <TextInput
                   type="email"
                   placeholder="Nomor WhatsApp"
-                  size="lg"
+                  size="md"
                   leftSection={<IconBrandWhatsapp />}
                   {...form.getInputProps("nomorWhatsapp")}
                 />
               </SimpleGrid>
-              <Button type="submit" tt="uppercase" size="lg" w="360px">
+              <Button type="submit" tt="uppercase" size="md" w="360px">
                 Daftar
               </Button>
               <Flex gap="xs">

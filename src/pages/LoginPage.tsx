@@ -29,10 +29,10 @@ const loginFormSchema = v.object({
   ),
 });
 
-type LoginFormValues = v.InferOutput<typeof loginFormSchema>;
+type LoginInput = v.InferInput<typeof loginFormSchema>;
 
 export default function LoginPage() {
-  const form = useForm<LoginFormValues>({
+  const form = useForm<LoginInput>({
     mode: "uncontrolled",
     initialValues: {
       email: "",
@@ -64,25 +64,25 @@ export default function LoginPage() {
             component="form"
             onSubmit={form.onSubmit(onSubmit)}
           >
-            <Flex direction="column" gap="lg" align="center" justify="center">
+            <Flex direction="column" gap="xs" align="center" justify="center">
               <TextInput
                 w="100%"
                 type="email"
                 placeholder="Email"
-                size="lg"
+                size="md"
                 {...form.getInputProps("email")}
               />
               <PasswordInput
                 w="100%"
                 type="password"
                 placeholder="Kata Sandi"
-                size="lg"
+                size="md"
                 {...form.getInputProps("kataSandi")}
               />
               <Anchor component={Link} to="/forgot-password">
                 Lupa kata sandi?
               </Anchor>
-              <Button type="submit" tt="uppercase" size="lg" w="360px">
+              <Button type="submit" tt="uppercase" size="md" w="360px">
                 Masuk
               </Button>
               <Flex gap="xs">

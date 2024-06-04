@@ -4,6 +4,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import HomePage from "./pages/HomePage";
 import JobsPage from "./pages/JobsPage";
 import LoginPage from "./pages/LoginPage";
+import OnboardingPage from "./pages/OnboardingPage";
 import RegisterPage from "./pages/RegisterPage";
 
 export const router = createBrowserRouter([
@@ -13,4 +14,5 @@ export const router = createBrowserRouter([
   { path: "/register", Component: RegisterPage },
   { path: "/login", Component: LoginPage },
   { path: "/forgot-password", Component: ForgotPasswordPage },
+  { path: "/onboarding", Component: OnboardingPage },
 ]);
