@@ -135,8 +135,8 @@ export default function RegisterPage() {
                   {...form.getInputProps("alamat")}
                 />
                 <TextInput
-                  type="email"
                   placeholder="Nomor WhatsApp"
+                  inputMode="numeric"
                   size="md"
                   leftSection={<IconBrandWhatsapp />}
                   {...form.getInputProps("nomorWhatsapp")}

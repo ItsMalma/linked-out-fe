@@ -1,30 +1,77 @@
 import {
-  Anchor,
-  Avatar,
   Button,
   Container,
   Flex,
+  MultiSelect,
   Pagination,
   Paper,
-  Pill,
+  ScrollArea,
+  Select,
   SimpleGrid,
-  Text,
+  Stack,
+  Switch,
   TextInput,
-  Title,
 } from "@mantine/core";
-import {
-  IconCircleDashedCheck,
-  IconMapPin,
-  IconSearch,
-} from "@tabler/icons-react";
+import { useForm } from "@mantine/form";
+import { IconSearch } from "@tabler/icons-react";
+import { valibotResolver } from "mantine-form-valibot-resolver";
+import * as v from "valibot";
+import JobItem from "../components/JobItem";
 import MainLayout from "../layouts/MainLayout";
 
+const tipePekerjaan = [
+  "Penuh Waktu",
+  "Paruh Waktu",
+  "Harian",
+  "Kontrak",
+  "Magang",
+] as const;
+
+const pengalaman = [
+  "Kurang dari setahun",
+  "1 - 3 tahun",
+  "3 - 5 tahun",
+  "5 - 10 tahun",
+  "Lebih dari 10 tahun",
+] as const;
+
+const terakhirDiperbarui = [
+  "Sebulan terakhir",
+  "Seminggu terakhir",
+  "24 jam terakhir",
+  "Kapan Pun",
+] as const;
+
+const jobsFormSchema = v.object({
+  prioritaskan: v.picklist(["Paling Relevan", "Baru Ditambahkan"]),
+  tipePekerjaan: v.array(v.picklist(tipePekerjaan)),
+  bisaKerjaRemote: v.boolean(),
+  lokasi: v.array(v.string()),
+  pengalaman: v.array(v.picklist(pengalaman)),
+  terakhirDiperbarui: v.picklist(terakhirDiperbarui),
+});
+
+type JobsForm = v.InferInput<typeof jobsFormSchema>;
+
 export default function JobsPage() {
+  const form = useForm<JobsForm>({
+    mode: "uncontrolled",
+    initialValues: {
+      prioritaskan: "Paling Relevan",
+      tipePekerjaan: [],
+      bisaKerjaRemote: true,
+      lokasi: [],
+      pengalaman: [],
+      terakhirDiperbarui: "Kapan Pun",
+    },
+    validate: valibotResolver(jobsFormSchema),
+  });
+
   return (
     <MainLayout>
       <Container w="100%" size="xl" py="xl">
         <Flex direction="column" gap="lg">
-          <Flex w="100%" gap="md">
+          <Flex w="100%" gap="md" pos="sticky">
             <TextInput
               flex="1 1 0"
               leftSection={<IconSearch />}
@@ -34,415 +81,109 @@ export default function JobsPage() {
               Cari
             </Button>
           </Flex>
-          <SimpleGrid cols={3}>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Backend Engineer
-                  </Title>
-                  <Text c="gray.7" fw="500">
-                    Gaji tidak ditampilkan
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Kerja di kantor</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Sarjana (S1)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Agile Technica</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Tangerang, Banten</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
+          <Flex w="100%" gap="md" align="start">
+            <Paper withBorder p="md" w="300" maw="300">
+              <Stack>
+                <Select
+                  label="Prioritaskan"
+                  data={["Paling Relevan", "Baru Ditambahkan"]}
+                  {...form.getInputProps("prioritaskan")}
+                />
+                <MultiSelect
+                  label="Tipe Pekerjaan"
+                  data={tipePekerjaan}
+                  {...form.getInputProps("tipePekerjaan")}
+                />
+                <Switch
+                  label="Bisa Kerja Remote"
+                  {...form.getInputProps("bisaKerjaRemote")}
+                />
+                <MultiSelect
+                  label="Lokasi"
+                  data={[]}
+                  {...form.getInputProps("lokasi")}
+                />
+                <MultiSelect
+                  label="Pengalaman"
+                  data={pengalaman}
+                  {...form.getInputProps("pengalaman")}
+                />
+                <Select
+                  label="Terakhir Diperbarui"
+                  data={terakhirDiperbarui}
+                  {...form.getInputProps("terakhirDiperbarui")}
+                />
+              </Stack>
             </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Frontend Engineer
-                  </Title>
-                  <Text c="blue" fw="500">
-                    Rp3jt-Rp4jt
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Kerja di kantor</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Sarjana (S1)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Dabu Digital Agency</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Jakarta Barat, DKI Jakarta</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Telemarketing
-                  </Title>
-                  <Text c="blue" fw="500">
-                    Rp3,2jt-Rp8,1jt
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Remote/Dari rumah</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Diploma (D3)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Algorithmic Global FZE</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Kelapa Dua, Banten</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Backend Engineer
-                  </Title>
-                  <Text c="gray.7" fw="500">
-                    Gaji tidak ditampilkan
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Kerja di kantor</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Sarjana (S1)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Agile Technica</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Tangerang, Banten</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Frontend Engineer
-                  </Title>
-                  <Text c="blue" fw="500">
-                    Rp3jt-Rp4jt
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Kerja di kantor</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Sarjana (S1)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Dabu Digital Agency</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Jakarta Barat, DKI Jakarta</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Telemarketing
-                  </Title>
-                  <Text c="blue" fw="500">
-                    Rp3,2jt-Rp8,1jt
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Remote/Dari rumah</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Diploma (D3)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Algorithmic Global FZE</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Kelapa Dua, Banten</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Backend Engineer
-                  </Title>
-                  <Text c="gray.7" fw="500">
-                    Gaji tidak ditampilkan
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Kerja di kantor</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Sarjana (S1)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Agile Technica</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Tangerang, Banten</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Frontend Engineer
-                  </Title>
-                  <Text c="blue" fw="500">
-                    Rp3jt-Rp4jt
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Kerja di kantor</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Sarjana (S1)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Dabu Digital Agency</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Jakarta Barat, DKI Jakarta</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Telemarketing
-                  </Title>
-                  <Text c="blue" fw="500">
-                    Rp3,2jt-Rp8,1jt
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Remote/Dari rumah</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Diploma (D3)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Algorithmic Global FZE</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Kelapa Dua, Banten</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Backend Engineer
-                  </Title>
-                  <Text c="gray.7" fw="500">
-                    Gaji tidak ditampilkan
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Kerja di kantor</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Sarjana (S1)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Agile Technica</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Tangerang, Banten</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-            <Paper withBorder p="md">
-              <Flex direction="column" gap="sm">
-                <Flex justify="space-between">
-                  <Title fz="h4" fw="600">
-                    Frontend Engineer
-                  </Title>
-                  <Text c="blue" fw="500">
-                    Rp3jt-Rp4jt
-                  </Text>
-                </Flex>
-                <Pill.Group>
-                  <Pill>Kerja di kantor</Pill>
-                  <Pill>Penuh waktu</Pill>
-                  <Pill>1 - 3 tahun</Pill>
-                  <Pill>Minimal Sarjana (S1)</Pill>
-                </Pill.Group>
-                <Flex gap="xs">
-                  <Avatar />
-                  <Flex direction="column" gap="2">
-                    <Flex gap="4" align="center">
-                      <IconCircleDashedCheck
-                        color="var(--mantine-color-blue-5)"
-                        size="20"
-                      />
-                      <Anchor>Dabu Digital Agency</Anchor>
-                    </Flex>
-                    <Flex gap="4" align="center">
-                      <IconMapPin
-                        color="var(--mantine-color-gray-7)"
-                        size="20"
-                      />
-                      <Text>Jakarta Barat, DKI Jakarta</Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Paper>
-          </SimpleGrid>
+            <ScrollArea>
+              <SimpleGrid cols={2}>
+                <JobItem
+                  id="1"
+                  title="Frontend Engineer"
+                  salary="Rp3jt-Rp4jt"
+                  tags={[
+                    "Kerja di kantor",
+                    "Penuh waktu",
+                    "1 - 3 tahun",
+                    "Minimal Sarjana (S1)",
+                  ]}
+                  company="Dabu Digital Agency"
+                  location="Jakarta Barat, DKI Jakarta"
+                />
+                <JobItem
+                  id="1"
+                  title="Backend Engineer"
+                  tags={[
+                    "Kerja di kantor",
+                    "Penuh waktu",
+                    "1 - 3 tahun",
+                    "Minimal Sarjana (S1)",
+                  ]}
+                  company="Dabu Digital Agency"
+                  location="Jakarta Barat, DKI Jakarta"
+                />
+                <JobItem
+                  id="1"
+                  title="Frontend Engineer"
+                  salary="Rp3jt-Rp4jt"
+                  tags={[
+                    "Kerja di kantor",
+                    "Penuh waktu",
+                    "1 - 3 tahun",
+                    "Minimal Sarjana (S1)",
+                  ]}
+                  company="Dabu Digital Agency"
+                  location="Jakarta Barat, DKI Jakarta"
+                />
+                <JobItem
+                  id="1"
+                  title="Frontend Engineer"
+                  salary="Rp3jt-Rp4jt"
+                  tags={[
+                    "Kerja di kantor",
+                    "Penuh waktu",
+                    "1 - 3 tahun",
+                    "Minimal Sarjana (S1)",
+                  ]}
+                  company="Dabu Digital Agency"
+                  location="Jakarta Barat, DKI Jakarta"
+                />
+                <JobItem
+                  id="1"
+                  title="Frontend Engineer"
+                  salary="Rp3jt-Rp4jt"
+                  tags={[
+                    "Kerja di kantor",
+                    "Penuh waktu",
+                    "1 - 3 tahun",
+                    "Minimal Sarjana (S1)",
+                  ]}
+                  company="Dabu Digital Agency"
+                  location="Jakarta Barat, DKI Jakarta"
+                />
+              </SimpleGrid>
+            </ScrollArea>
+          </Flex>
           <Flex align="center" justify="center">
             <Pagination total={10} />
           </Flex>
