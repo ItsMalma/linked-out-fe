@@ -25,7 +25,9 @@ export default function JobItem(props: JobProps) {
         </Flex>
         <Pill.Group>
           {props.tags.map((tag) => (
-            <Pill key={tag}>{tag}</Pill>
+            <Pill bg="gray.3" key={tag}>
+              {tag}
+            </Pill>
           ))}
         </Pill.Group>
         <Flex gap="xs">

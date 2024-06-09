@@ -6,6 +6,7 @@ import JobPage from "./pages/JobPage";
 import JobsPage from "./pages/JobsPage";
 import LoginPage from "./pages/LoginPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import ProfilePage from "./pages/ProfilePage";
 import RegisterPage from "./pages/RegisterPage";
 
 export const router = createBrowserRouter([
@@ -17,4 +18,5 @@ export const router = createBrowserRouter([
   { path: "/forgot-password", Component: ForgotPasswordPage },
   { path: "/onboarding", Component: OnboardingPage },
   { path: "/job/:id", Component: JobPage },
+  { path: "/profile", Component: ProfilePage },
 ]);

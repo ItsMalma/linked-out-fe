@@ -115,13 +115,13 @@ export default function JobPage() {
           <Stack gap={4}>
             <Title order={5}>Keterampilan</Title>
             <Pill.Group>
-              <Pill>PHP</Pill>
-              <Pill>JavaScript</Pill>
-              <Pill>React</Pill>
-              <Pill>Node.js</Pill>
-              <Pill>Express</Pill>
-              <Pill>MySQL</Pill>
-              <Pill>PostgreSQL</Pill>
+              <Pill bg="gray.3">PHP</Pill>
+              <Pill bg="gray.3">JavaScript</Pill>
+              <Pill bg="gray.3">React</Pill>
+              <Pill bg="gray.3">Node.js</Pill>
+              <Pill bg="gray.3">Express</Pill>
+              <Pill bg="gray.3">MySQL</Pill>
+              <Pill bg="gray.3">PostgreSQL</Pill>
             </Pill.Group>
           </Stack>
           <Stack gap={4}>
