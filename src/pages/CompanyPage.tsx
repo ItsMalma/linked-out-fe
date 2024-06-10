@@ -34,7 +34,7 @@ export default function CompanyPage() {
               <SimpleGrid cols={2}>
                 <Stack gap={0}>
                   <Title tt="uppercase" fz="h6">
-                    Kantor Pusat
+                    Lokasi
                   </Title>
                   <Text>Jakarta Selatan, DKI Jakarta, Indonesia</Text>
                 </Stack>
@@ -79,20 +79,6 @@ export default function CompanyPage() {
                 }}
               />
             </TypographyStylesProvider>
-          </Flex>
-          <Flex direction="column">
-            <Divider
-              size="sm"
-              my="md"
-              label={
-                <Title tt="uppercase" order={2} fz="h4" c="black">
-                  Alamat
-                </Title>
-              }
-              labelPosition="left"
-              color="black"
-            />
-            <Text>Jl. Dipati Unus No. 128, Bekasi, Jawa Barat, 17114</Text>
           </Flex>
           <Flex direction="column">
             <Divider

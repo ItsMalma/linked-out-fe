@@ -12,25 +12,23 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { valibotResolver } from "mantine-form-valibot-resolver";
 import { useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as v from "valibot";
-import { isMobilePhone } from "validator";
+import { isURL } from "validator";
 import MainLayout from "../layouts/MainLayout";
 
-const registerFormSchema = v.object({
-  namaDepan: v.pipe(
+const companyRegisterFormSchema = v.object({
+  nama: v.pipe(
     v.string("Format tidak valid"),
     v.minLength(1, "Tidak boleh kosong"),
     v.maxLength(100, "Maksimal 100 karakter")
   ),
-  namaBelakang: v.nullable(
-    v.pipe(
-      v.string("Format tidak valid"),
-      v.maxLength(100, "Maksimal 100 karakter")
-    )
+  deskripsi: v.pipe(
+    v.string("Format tidak valid"),
+    v.minLength(1, "Tidak boleh kosong"),
+    v.maxLength(255, "Maksimal 255 karakter")
   ),
   email: v.pipe(
     v.string("Format tidak valid"),
@@ -48,29 +46,29 @@ const registerFormSchema = v.object({
     v.minLength(1, "Tidak boleh kosong"),
     v.maxLength(200, "Maksimal 200 karakter")
   ),
-  nomorWhatsapp: v.pipe(
+  situs: v.pipe(
     v.string("Format tidak valid"),
     v.minLength(1, "Tidak boleh kosong"),
-    v.check(isMobilePhone, "Format nomor whatsapp salah")
+    v.check(isURL, "Format nomor whatsapp salah")
   ),
 });
 
-type RegisterInput = v.InferInput<typeof registerFormSchema>;
+type CompanyRegisterInput = v.InferInput<typeof companyRegisterFormSchema>;
 
-export default function RegisterPage() {
+export default function CompanyRegisterPage() {
   const navigate = useNavigate();
 
-  const form = useForm<RegisterInput>({
+  const form = useForm<CompanyRegisterInput>({
     mode: "uncontrolled",
     initialValues: {
-      namaDepan: "",
-      namaBelakang: "",
+      nama: "",
+      deskripsi: "",
       email: "",
       kataSandi: "",
       lokasi: "",
-      nomorWhatsapp: "",
+      situs: "",
     },
-    validate: valibotResolver(registerFormSchema),
+    validate: valibotResolver(companyRegisterFormSchema),
   });
   const onSubmit = useCallback(
     function () {
@@ -109,14 +107,14 @@ export default function RegisterPage() {
             >
               <SimpleGrid w="100%" cols={2}>
                 <TextInput
-                  placeholder="Nama depan"
+                  placeholder="Nama"
                   size="md"
-                  {...form.getInputProps("namaDepan")}
+                  {...form.getInputProps("nama")}
                 />
                 <TextInput
-                  placeholder="Nama belakang"
+                  placeholder="Deskripsi"
                   size="md"
-                  {...form.getInputProps("namaBelakang")}
+                  {...form.getInputProps("deskripsi")}
                 />
                 <TextInput
                   type="email"
@@ -136,11 +134,9 @@ export default function RegisterPage() {
                   {...form.getInputProps("lokasi")}
                 />
                 <TextInput
-                  placeholder="Nomor WhatsApp"
-                  inputMode="numeric"
+                  placeholder="Situs"
                   size="md"
-                  leftSection={<IconBrandWhatsapp />}
-                  {...form.getInputProps("nomorWhatsapp")}
+                  {...form.getInputProps("situs")}
                 />
               </SimpleGrid>
               <Button type="submit" tt="uppercase" size="md" w="360px">
@@ -154,8 +150,8 @@ export default function RegisterPage() {
                   </Anchor>
                 </Flex>
                 <Flex gap="xs">
-                  <Anchor component={Link} to="/company/register">
-                    Buat akun perusahaan
+                  <Anchor component={Link} to="/register">
+                    Buat akun pengguna
                   </Anchor>
                 </Flex>
               </Stack>
