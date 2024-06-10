@@ -122,6 +122,17 @@ export default function CompanyLayout({
                 >
                   Lamaran
                 </Anchor>
+                <Anchor
+                  c="black"
+                  tt="uppercase"
+                  fw="500"
+                  component={Link}
+                  to="/company/jobs"
+                  visibleFrom="md"
+                  underline={pathname == "/company/jobs" ? "always" : "hover"}
+                >
+                  Lowongan
+                </Anchor>
               </Group>
               <Group gap="xl">
                 <Burger hiddenFrom="md" onClick={openDrawer} />

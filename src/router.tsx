@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ApplicationsPage from "./pages/ApplicationsPage";
 import CompaniesPage from "./pages/CompaniesPage";
 import CompanyApplicationsPage from "./pages/CompanyApplicationsPage";
+import CompanyJobsPage from "./pages/CompanyJobsPage";
 import CompanyPage from "./pages/CompanyPage";
 import CompanyRegisterPage from "./pages/CompanyRegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
@@ -27,4 +28,5 @@ export const router = createBrowserRouter([
   { path: "/applications", Component: ApplicationsPage },
   { path: "/company/register", Component: CompanyRegisterPage },
   { path: "/company/applications", Component: CompanyApplicationsPage },
+  { path: "/company/jobs", Component: CompanyJobsPage },
 ]);
