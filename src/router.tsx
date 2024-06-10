@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import CompaniesPage from "./pages/CompaniesPage";
+import CompanyPage from "./pages/CompanyPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import HomePage from "./pages/HomePage";
 import JobPage from "./pages/JobPage";
@@ -19,4 +20,5 @@ export const router = createBrowserRouter([
   { path: "/onboarding", Component: OnboardingPage },
   { path: "/job/:id", Component: JobPage },
   { path: "/profile", Component: ProfilePage },
+  { path: "/company/:id", Component: CompanyPage },
 ]);
