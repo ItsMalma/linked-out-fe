@@ -3,37 +3,62 @@ import {
   Button,
   Container,
   Flex,
+  PasswordInput,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { valibotResolver } from "mantine-form-valibot-resolver";
 import { useCallback } from "react";
 import { Link } from "react-router-dom";
-import * as v from "valibot";
+import {
+  ForgotPasswordInput,
+  forgotPassword,
+  forgotPasswordFormSchema,
+} from "../apis/forgotPassword";
 import MainLayout from "../layouts/MainLayout";
-
-const forgotPasswordFormSchema = v.object({
-  email: v.pipe(
-    v.string("Format tidak valid"),
-    v.minLength(1, "Tidak boleh kosong"),
-    v.maxLength(100, "Maksimal 255 karakter"),
-    v.email("Format email salah")
-  ),
-});
-
-type ForgotPasswordInput = v.InferInput<typeof forgotPasswordFormSchema>;
 
 export default function ForgotPasswordPage() {
   const form = useForm<ForgotPasswordInput>({
     mode: "uncontrolled",
     initialValues: {
       email: "",
+      kataSandi: "",
     },
     validate: valibotResolver(forgotPasswordFormSchema),
   });
-  const onSubmit = useCallback(function () {}, []);
+  const onSubmit = useCallback(function (input: ForgotPasswordInput) {
+    const id = notifications.show({
+      message: "Merubah kata sandi",
+      color: "blue",
+      autoClose: false,
+      loading: true,
+    });
+
+    forgotPassword(input, (success) => {
+      if (success) {
+        notifications.update({
+          id,
+          title: "Berhasil merubah kata sandi",
+          message:
+            "Kami telah mengirimkan email konfirmasi kepada Anda, silahkan cek!",
+          color: "green",
+          autoClose: 3000,
+          loading: false,
+        });
+      } else {
+        notifications.update({
+          id,
+          message: "Gagal merubah kata sandi",
+          color: "red",
+          autoClose: 3000,
+          loading: false,
+        });
+      }
+    });
+  }, []);
 
   return (
     <MainLayout bg="gray.0">
@@ -65,9 +90,15 @@ export default function ForgotPasswordPage() {
                   size="md"
                   {...form.getInputProps("email")}
                 />
+                <PasswordInput
+                  w="100%"
+                  placeholder="Kata Sandi Baru"
+                  size="md"
+                  {...form.getInputProps("kataSandi")}
+                />
                 <Text>
-                  Masukkan emailmu dan kami akan mengirimkan tautan untuk
-                  mereset kata sandi.
+                  Masukkan email dan kata sandi barumu dan kami akan mengirim
+                  link konfirmasi ke email kamu!
                 </Text>
               </Flex>
               <Stack gap="xs" w="100%">

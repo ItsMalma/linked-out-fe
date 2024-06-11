@@ -9,29 +9,16 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { valibotResolver } from "mantine-form-valibot-resolver";
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
-import * as v from "valibot";
+import { Link, useNavigate } from "react-router-dom";
+import { LoginInput, login, loginFormSchema } from "../apis/login";
 import MainLayout from "../layouts/MainLayout";
 
-const loginFormSchema = v.object({
-  email: v.pipe(
-    v.string("Format tidak valid"),
-    v.minLength(1, "Tidak boleh kosong"),
-    v.maxLength(100, "Maksimal 255 karakter"),
-    v.email("Format email salah")
-  ),
-  kataSandi: v.pipe(
-    v.string("Format tidak valid"),
-    v.minLength(1, "Tidak boleh kosong"),
-    v.minLength(8, "Minimal 8 karakter")
-  ),
-});
-
-type LoginInput = v.InferInput<typeof loginFormSchema>;
-
 export default function LoginPage() {
+  const navigate = useNavigate();
+
   const form = useForm<LoginInput>({
     mode: "uncontrolled",
     initialValues: {
@@ -40,7 +27,38 @@ export default function LoginPage() {
     },
     validate: valibotResolver(loginFormSchema),
   });
-  const onSubmit = useCallback(function () {}, []);
+  const onSubmit = useCallback(
+    function (input: LoginInput) {
+      login(input, (success) => {
+        const id = notifications.show({
+          message: "Login",
+          color: "blue",
+          autoClose: false,
+          loading: true,
+        });
+
+        if (success) {
+          notifications.update({
+            id,
+            message: "Berhasil login",
+            color: "green",
+            autoClose: 3000,
+            loading: false,
+          });
+          navigate("/onboarding");
+        } else {
+          notifications.update({
+            id,
+            message: "Gagal login",
+            color: "red",
+            autoClose: 3000,
+            loading: false,
+          });
+        }
+      });
+    },
+    [navigate]
+  );
 
   return (
     <MainLayout bg="gray.0">

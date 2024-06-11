@@ -1,5 +1,6 @@
 import {
   Anchor,
+  Avatar,
   Burger,
   Container,
   Divider,
@@ -9,6 +10,7 @@ import {
   MantineColor,
   NavLink,
   StyleProp,
+  UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ReactNode } from "react";
@@ -136,6 +138,9 @@ export default function CompanyLayout({
               </Group>
               <Group gap="xl">
                 <Burger hiddenFrom="md" onClick={openDrawer} />
+                <UnstyledButton component={Link} to="/company/profile">
+                  <Avatar />
+                </UnstyledButton>
               </Group>
             </Flex>
           </Container>

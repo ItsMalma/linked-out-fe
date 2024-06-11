@@ -4,6 +4,7 @@ import CompaniesPage from "./pages/CompaniesPage";
 import CompanyApplicationsPage from "./pages/CompanyApplicationsPage";
 import CompanyJobsPage from "./pages/CompanyJobsPage";
 import CompanyPage from "./pages/CompanyPage";
+import CompanyProfilePage from "./pages/CompanyProfilePage";
 import CompanyRegisterPage from "./pages/CompanyRegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import HomePage from "./pages/HomePage";
@@ -29,4 +30,5 @@ export const router = createBrowserRouter([
   { path: "/company/register", Component: CompanyRegisterPage },
   { path: "/company/applications", Component: CompanyApplicationsPage },
   { path: "/company/jobs", Component: CompanyJobsPage },
+  { path: "/company/profile", Component: CompanyProfilePage },
 ]);

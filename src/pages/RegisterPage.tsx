@@ -12,50 +12,15 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { valibotResolver } from "mantine-form-valibot-resolver";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import * as v from "valibot";
-import { isMobilePhone } from "validator";
+import { RegisterInput, register, registerFormSchema } from "../apis/register";
+import useApi from "../hooks/useApi";
+import useLocations from "../hooks/useLocations";
 import MainLayout from "../layouts/MainLayout";
-
-const registerFormSchema = v.object({
-  namaDepan: v.pipe(
-    v.string("Format tidak valid"),
-    v.minLength(1, "Tidak boleh kosong"),
-    v.maxLength(100, "Maksimal 100 karakter")
-  ),
-  namaBelakang: v.nullable(
-    v.pipe(
-      v.string("Format tidak valid"),
-      v.maxLength(100, "Maksimal 100 karakter")
-    )
-  ),
-  email: v.pipe(
-    v.string("Format tidak valid"),
-    v.minLength(1, "Tidak boleh kosong"),
-    v.maxLength(100, "Maksimal 255 karakter"),
-    v.email("Format email salah")
-  ),
-  kataSandi: v.pipe(
-    v.string("Format tidak valid"),
-    v.minLength(1, "Tidak boleh kosong"),
-    v.minLength(8, "Minimal 8 karakter")
-  ),
-  lokasi: v.pipe(
-    v.string("Format tidak valid"),
-    v.minLength(1, "Tidak boleh kosong"),
-    v.maxLength(200, "Maksimal 200 karakter")
-  ),
-  nomorWhatsapp: v.pipe(
-    v.string("Format tidak valid"),
-    v.minLength(1, "Tidak boleh kosong"),
-    v.check(isMobilePhone, "Format nomor whatsapp salah")
-  ),
-});
-
-type RegisterInput = v.InferInput<typeof registerFormSchema>;
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -63,21 +28,59 @@ export default function RegisterPage() {
   const form = useForm<RegisterInput>({
     mode: "uncontrolled",
     initialValues: {
+      nik: "",
       namaDepan: "",
       namaBelakang: "",
       email: "",
       kataSandi: "",
       lokasi: "",
-      nomorWhatsapp: "",
+      nomorWhatsApp: "",
     },
     validate: valibotResolver(registerFormSchema),
   });
   const onSubmit = useCallback(
-    function () {
-      navigate("/onboarding");
+    function (input: RegisterInput) {
+      const id = notifications.show({
+        message: "Mendaftarkan pengguna",
+        autoClose: false,
+        loading: true,
+        color: "blue",
+      });
+      register(input, (success) => {
+        if (success) {
+          notifications.update({
+            id,
+            message: "Berhasil mendaftarkan pengguna!",
+            autoClose: 3000,
+            loading: false,
+            color: "green",
+          });
+          navigate("/login");
+        } else {
+          notifications.update({
+            id,
+            message: "Gagal mendaftarkan pengguna!",
+            autoClose: 3000,
+            loading: false,
+            color: "red",
+          });
+        }
+      });
     },
     [navigate]
   );
+
+  const [daftarLokasi, setDaftarLokasi] = useState<string[]>([]);
+  useApi(useLocations(), (locations, _, err) => {
+    if (locations) setDaftarLokasi(locations.map((location) => location.nama));
+    if (err) {
+      notifications.show({
+        message: "Gagal mengambil data lokasi",
+        autoClose: 3000,
+        color: "red",
+      });
+    }
+  });
 
   return (
     <MainLayout bg="gray.0">
@@ -109,6 +112,12 @@ export default function RegisterPage() {
             >
               <SimpleGrid w="100%" cols={2}>
                 <TextInput
+                  placeholder="NIK"
+                  size="md"
+                  {...form.getInputProps("nik")}
+                />
+                <Box></Box>
+                <TextInput
                   placeholder="Nama depan"
                   size="md"
                   {...form.getInputProps("namaDepan")}
@@ -133,6 +142,7 @@ export default function RegisterPage() {
                 <Autocomplete
                   placeholder="Lokasi"
                   size="md"
+                  data={daftarLokasi}
                   {...form.getInputProps("lokasi")}
                 />
                 <TextInput
@@ -140,7 +150,7 @@ export default function RegisterPage() {
                   inputMode="numeric"
                   size="md"
                   leftSection={<IconBrandWhatsapp />}
-                  {...form.getInputProps("nomorWhatsapp")}
+                  {...form.getInputProps("nomorWhatsApp")}
                 />
               </SimpleGrid>
               <Button type="submit" tt="uppercase" size="md" w="360px">
